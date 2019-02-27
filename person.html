@@ -38,8 +38,25 @@
         document.getElementById("wd").style.display="none";
     }
     function check(){
-        
+        document.getElementById("check").style.display="block";
     }
+    function close2(){
+        document.getElementById("check").style.display="none";
+    }
+    function get1(){
+        $.ajax({url:"/info",
+           success:function(pct){
+        var pct1 = JSON.parse(pct);
+		document.getElementsByClassName(".back_img2").src=pct1;
+    }})
+    }
+    function name1(){
+        document.getElementById("name_change").style.display="block";
+    }
+    function introduce1(){
+        document.getElementById("introduce_change").style.display="block";
+    }
+
 </script>
 </head>
 <body>
@@ -162,7 +179,7 @@
     </div>
     <div style="clear:both"></div>
 </div>
-<div id="wd" style="position:fixed;left:600px;display:none;z-index:100;border-radius: 2px;">
+<div id="wd" style="position:fixed;left:600px;z-index:100;border-radius: 2px;display:none;">
     <div class="window_title"><b style="margin-left:10px;">头像设置</b><input type="image" src="D:\vccode代码\redrock-寒假\图片\关闭.png" style="width:15px;float:right;position:relative;right:20px;top:12px;" onclick="close1()"></div>
     <div class="window_inner" >
         <div class="window_innertop" style="display:flex;flex-direction: row;justify-content: center;">
@@ -170,8 +187,12 @@
             <div style="width:88px;height:27px;font-size:10px;text-align: center;line-height: 28px;border-top:solid 1px #ccc;border-left:solid 1px #ccc;border-right:solid 1px #ccc;border-bottom:solid 2px #ff8140;"><b>微博相册</b></div>
         </div>
         <div class="window_innerbox" style="display:flex;justify-content: center;margin-top:5px;">
-            <div style="background:#f2f2f5;width:508px;height:370px;display:flex;justify-content: center;">
-                <div style="background:white;border:solid 1px #cccccc;width:100px;height:30px;text-align: center;line-height: 30px;margin-top:150px;">选择图片</div>
+            <div style="background:#f2f2f5;width:508px;height:370px;">
+                <div style="position:relative;left:200px;background:white;border:solid 1px #cccccc;width:80px;height:20px;text-align: center;line-height: 20px;margin-top:150px;font-size:10px;">选择图片</div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                <input type="file" style="position:relative;bottom:25px;left:205px;opacity:0;">
+                <input type="submit" onclick="get1()" value="提交" style="position:relative;float:right;top:200px;border:0px;background: transparent;color:tomato;font-size:15px;" >
+            </form>
             </div>
         </div>
     </div>
@@ -186,6 +207,18 @@
 <span class="message_inner"></span>
 </div>
 <span style="color:#4dcff7;font-size:10px;position:relative;left:10px;" onclick="check()">修改信息</span>
+</div>
+<div id="check" style="background:white;width:500px;height:230px;position:fixed;left:520px;bottom:420px;z-index:49;display:none;">
+<img src="D:\vccode代码\redrock-寒假\图片\关闭.png" style="float:right;width:19px;margin-right:5px;margin-top:5px;" onclick="close2()">
+<div style="clear:both"></div>
+<form action="">
+<ul style="list-style: none;"> 
+<li><span style="font-size:10px;color:#ababb1;">昵称</span><span id="name"></span><span style="margin-left:20px;color:#4dcff7;font-size:10px;" onclick="name1()">点击修改</span><input type="text" id="name_change" style="margin-left:5px;display:none;"></li>
+<li><span style="font-size:10px;color:#ababb1;">个人简介</span><span id="introduce"></span><span style="margin-left:20px;color:#4dcff7;font-size:10px;" onclick="introduce1()">点击修改</span><textarea cols="50" rows="5" id="introduce_change" style="margin-left:5px;display:none;"></textarea></li>
+</ul>
+<input type="submit" style="border:0px;background:transparent;color:tomato;font-size:15px;float:right;">
+<div style="clear:both"></div>
+</form>
 </div>
 </div>
 </body>
