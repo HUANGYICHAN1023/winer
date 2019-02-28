@@ -1,71 +1,134 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>个人主页</title>
-<script src="jquery-1.8.3.js" ></script>
-<link href="个人主页.css" rel="stylesheet" type="text/css">
-<script>
-    function Btn(){
-        var div = document.createElement("div");
-        div.style.cssText = 'width: 600px; height:100px; border-radius: 2px;background:white;z-index:1;position:relative;left:520px;bottom:265px;font-size:10px;margin-top:10px;';
-        document.body.appendChild(div);    
-        var text = document.getElementById("comment_div").value;
-        div.innerHTML=text;
-        $.post("/demo/demo_form.asp",
-  {
-    留言:$(text).val().toString()
-    })
-    }
-    window.onload=function(){
-        $.ajax({url:"/Login",
-        success:function(value){
-        var inner = JSON.parse(value);
-		$(".text").html(inner);
-    }})
-    $.ajax({url:"/info",
-           success:function(data){
-        var tridata = JSON.parse(data);
-		$(".gz").html(tridata.followCount);
-        $(".fs").html(tridata.fansCount);
-        $(".wb").html(tridata.followCount);
-    }})
-    }
-    function op(){
-        document.getElementById("wd").style.display="block";
-    }
-    function close1(){
-        document.getElementById("wd").style.display="none";
-    }
-    function check(){
-        document.getElementById("check").style.display="block";
-    }
-    function close2(){
-        document.getElementById("check").style.display="none";
-    }
-    function get1(){
-        $.ajax({url:"/info",
-           success:function(pct){
-        var pct1 = JSON.parse(pct);
-		document.getElementsByClassName(".back_img2").src=pct1;
-    }})
-    }
-    function name1(){
-        document.getElementById("name_change").style.display="block";
-    }
-    function introduce1(){
-        document.getElementById("introduce_change").style.display="block";
-    }
+    <meta charset="utf-8">
+    <title>个人主页</title>
+    <script src="js/jquery-1.8.3.js"></script>
+    <link href="user_home.css" rel="stylesheet" type="text/css">
+    <script>
+        function Btn() {
+            var div = document.createElement("div");
+            div.style.cssText = 'width: 600px; height:100px; border-radius: 2px;background:white;z-index:1;position:relative;left:520px;bottom:265px;margin-top:10px;font-size:15px;';
+            document.body.appendChild(div);
+            var text = document.getElementById("comment_div").value;
+            div.innerHTML = text;
+            $.post("/User/MessageAction",
+                {
+                    内容: text.toString(),
+                    父节点: 0,
+                    类型: "留言"
+                }
+                ,
+                function (txt) {
+                    var obj = JSON.parse(txt);
+                    if (obj.status == "10000") {
+                        alert(obj.data);
+                    }
+                    else if (obj.status == "10001") {
+                        alert(obj.data);
+                    }
+                    else if (obj.status == "10002") {
+                        alert(obj.data);
+                    }
+                })
+        }
+        $(function () {
+            $.get("/User",
+                function (txt) {
+                    var obj = JSON.parse(txt);
+                    document.getElementById("nickname").innerHTML = obj.data[0].nickname;
+                    document.getElementById("follow_count").innerHTML = obj.data[0].followCount;
+                    document.getElementById("fans_count").innerHTML = obj.data[0].fansCount;
+                    document.getElementById("weibo_count").innerHTML = obj.data[0].weiboCount;
+                })
+            // $.get("/info",
+            //     function (txt) {
+            //         var obj = JSON.parse(txt);
+            //         $(".text").html(obj.data[0].webText);
+            //     })
+        })
+        function login_out() {
+            $.post("/User/LoginOut",
+                {
+                }
+                ,
+                function (txt) {
+                    var obj = JSON.parse(txt);
+                    if (obj.status == "10000") {
+                        alert(obj.data);
+                        window.open("main.html");
+                    }
+                })
+        }
+        function op(){
+            document.getElementById("wd").style.display="block";
+        }
+        function close1(){
+            document.getElementById("wd").style.display="none";
+        }
+        function check(){
+            document.getElementById("check").style.display="block";
+        }
+        function close2(){
+            document.getElementById("check").style.display="none";
+        }
+        function get1(){
+            $.ajax({url:"/info",
+                success:function(pct){
+                    var pct1 = JSON.parse(pct);
+                    document.getElementsByClassName(".back_img2").src=pct1;
+                }})
+        }
+        function name1(){
+            document.getElementById("name_change").style.display="block";
+            // $.post("/User/SetNickname",
+            //     {
+            //         昵称:document.getElementById("name_change").value
+            //     }
+            //     ,
+            //     function (txt) {
+            //         var obj = JSON.parse(txt);
+            //         if (obj.status == "10000") {
+            //             alert(obj.data);
+            //         }
+            //         else if (obj.status == "10001") {
+            //             alert(obj.data);
+            //         }
+            //         else if (obj.status == "10002") {
+            //             alert(obj.data);
+            //         }
+            //     })
+        }
+        function introduce1(){
+            document.getElementById("introduce_change").style.display="block";
+            // $.post("/User/SetIntroduction",
+            //     {
+            //         简介:document.getElementById("introduce_change").value
+            //     }
+            //     ,
+            //     function (txt) {
+            //         var obj = JSON.parse(txt);
+            //         if (obj.status == "10000") {
+            //             alert(obj.data);
+            //         }
+            //         else if (obj.status == "10001") {
+            //             alert(obj.data);
+            //         }
+            //         else if (obj.status == "10002") {
+            //             alert(obj.data);
+            //         }
+            //     })
+        }
 
-</script>
+    </script>
 </head>
 <body>
-<div class="topblock1"> </div>
-<div class="topblock2"> </div>
+<div class="topblock1"></div>
+<div class="topblock2"></div>
 <div class="topblock3">
-<input type="text" name="search">
+    <input type="text" name="search">
 </div>
-<img  class="pct1" src="https://img.t.sinajs.cn/t5/style/images/register/logo_big.png?id=1395992824012">
+<img class="pct1" src="https://img.t.sinajs.cn/t5/style/images/register/logo_big.png?id=1395992824012">
 <div class="icon">
     <ul class="icon_ul">
         <li class="icon_li">
@@ -80,7 +143,7 @@
                 <span class="text_top">视频</span>
             </a>
         </li>
-        <li class="icon_li"> 
+        <li class="icon_li">
             <a href="https://weibo.com/">
                 <img class="pct2" src="D:\vccode代码\redrock-寒假\图片\发现-24 (1).png">
                 <span class="text_top">发现</span>
@@ -93,15 +156,13 @@
             </a>
         </li>
         <li class="icon_li">
-                <a href="D:\vccode代码\redrock-寒假\个人主页.html">
-                <img class="pct2" src="D:\vccode代码\redrock-寒假\图片\小人.png" > 
+            <a href="images\个人主页.html">
+                <img class="pct2" src="D:\vccode代码\redrock-寒假\图片\小人.png">
                 <span class="text_top">用户</span>
-                </a>
+            </a>
         </li>
         <li class="icon_li">
-                <a href="D:\vccode代码\redrock-寒假\微博主页.html">
-                    <span class="text_top">退出登录</span>
-                </a>
+            <span class="text_top" onclick="login_out">退出登录</span>
         </li>
     </ul>
     <div class="icon_character">
@@ -109,117 +170,132 @@
     </div>
 </div>
 <div class="comment">
-<div class="comment_flex" style="position:relative;left:520px;">
-    <div class="comment_put" style="float:left;">
-        <span class="span1">有什么新鲜事想告诉大家？</span>
-        <br>
-        <textarea  id="comment_div" cols="30" rows="10" style="font-size:10px;"></textarea>
-        <div class="comment_put_emoji">
-            <a class="emoji_link" href="https://www.bilibili.com/">
-                <img src="D:\vccode代码\redrock-寒假\图片\笑脸.png" >
-                <span>表情</span>
-            </a>
-            <a class="emoji_link" href="https://www.bilibili.com/">
-                <img src="D:\vccode代码\redrock-寒假\图片\图片.png" >
-                <span>图片</span>
-            </a>
-            <a class="emoji_link" href="https://www.bilibili.com/">
-                <img src="D:\vccode代码\redrock-寒假\图片\视频.png" >
-                <span>视频</span>
-            </a>
-            <a class="emoji_link" href="https://www.bilibili.com/">
-                <img src="D:\vccode代码\redrock-寒假\图片\话题.png" >
-                <span>话题</span>
-            </a>
-            <a class="emoji_link" href="https://www.bilibili.com/">
-                <img src="D:\vccode代码\redrock-寒假\图片\闪电.png" >
-                <span>头条文章</span>
-            </a>
-        </div>
-        <form action="form_action.asp" method="get">
-        <div class="comment_put_put">
-            <input type="text" class="getsth" style="display:none;font-size:20px;">
-            <input type="button" value="发布" onclick="Btn()">
-        </div>
-        </form>
-    </div>
-    <div class="comment_person" style="float:left; border-radius: 2px">
-        <div class="comment_person_back">
-            <img src="D:\vccode代码\redrock-寒假\图片\绿地.png" class="back_img1">
-            <img src="D:\vccode代码\redrock-寒假\图片\用户圆.png" class="back_img2" onclick="op()">
-        </div>
-        <div class="comment_person_data">
-            <div class="nameBox">
-                <a href="https://weibo.com/6018400217/profile?rightmod=1&wvr=6&mod=personinfo">用户</a>
+    <div class="comment_flex" style="position:relative;left:350px;">
+        <div class="comment_put" style="float:left;">
+            <span class="span1">有什么新鲜事想告诉大家？</span>
+            <br>
+            <textarea id="comment_div" cols="30" rows="10" style="font-size:15px"></textarea>
+            <div class="comment_put_emoji">
+                <a class="emoji_link" href="https://www.bilibili.com/">
+                    <img src="D:\vccode代码\redrock-寒假\图片\笑脸.png">
+                    <span>表情</span>
+                </a>
+                <a class="emoji_link" href="https://www.bilibili.com/">
+                    <img src="D:\vccode代码\redrock-寒假\图片\图片.png">
+                    <span>图片</span>
+                </a>
+                <a class="emoji_link" href="https://www.bilibili.com/">
+                    <img src="D:\vccode代码\redrock-寒假\图片\视频.png">
+                    <span>视频</span>
+                </a>
+                <a class="emoji_link" href="https://www.bilibili.com/">
+                    <img src="D:\vccode代码\redrock-寒假\图片\话题.png">
+                    <span>话题</span>
+                </a>
+                <a class="emoji_link" href="https://www.bilibili.com/">
+                    <img src="D:\vccode代码\redrock-寒假\图片\闪电.png">
+                    <span>头条文章</span>
+                </a>
             </div>
-            <ul class="nameBox_data">
-                <li class="data1">
-                    <a href="">
-                        <strong class="gz">0</strong>
-                        <br>
-                        <span class="data_text">关注</span>
-                    </a>
-                </li>
-                <li class="data2">
+            <form action="/User/MessageAction" method="post">
+                <div class="comment_put_put">
+                    <input type="text" class="getsth" style="display:none;font-size:20px">
+                    <input type="button" value="发布" onclick="Btn()">
+                </div>
+            </form>
+        </div>
+        <div class="comment_person" style="float:left; border-radius: 2px">
+            <div class="comment_person_back">
+                <img src="D:\vccode代码\redrock-寒假\图片\绿地.png" class="back_img1">
+                <img src="D:\vccode代码\redrock-寒假\图片\用户圆.png" class="back_img2" onclick="op()">
+            </div>
+            <div class="comment_person_data">
+                <div class="nameBox">
+                    <a href="https://weibo.com/6018400217/profile?rightmod=1&wvr=6&mod=personinfo" id="nickname">用户</a>
+                </div>
+                <ul class="nameBox_data">
+                    <li class="data1">
                         <a href="">
-                            <strong class="fs">0</strong>
+                            <strong id="follow_count" class="gz">0</strong>
+                            <br>
+                            <span class="data_text">关注</span>
+                        </a>
+                    </li>
+                    <li class="data2">
+                        <a href="">
+                            <strong id="fans_count" class="fs">0</strong>
                             <br>
                             <span class="data_text">粉丝</span>
                         </a>
                     </li>
                     <li class="data3">
-                            <a href="">
-                                <strong class="wb">0</strong>
-                                <br>
-                                <span class="data_text">微博</span>
-                            </a>
-                        </li>
-            </ul>
+                        <a href="">
+                            <strong id="weibo_count" class="wb">0</strong>
+                            <br>
+                            <span class="data_text">微博</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
+        <div style="clear:both"></div>
     </div>
-    <div style="clear:both"></div>
 </div>
-<div id="wd" style="position:fixed;left:600px;z-index:100;border-radius: 2px;display:none;">
-    <div class="window_title"><b style="margin-left:10px;">头像设置</b><input type="image" src="D:\vccode代码\redrock-寒假\图片\关闭.png" style="width:15px;float:right;position:relative;right:20px;top:12px;" onclick="close1()"></div>
-    <div class="window_inner" >
+<div id="wd" style="position:fixed;left:400px;z-index:100;border-radius: 2px;display:none;">
+    <div class="window_title">
+        <b style="margin-left:10px;">头像设置</b>
+        <input type="image"src="D:\vccode代码\redrock-寒假\图片\关闭.png"style="width:15px;float:right;position:relative;right:20px;top:12px;"onclick="close1()">
+    </div>
+    <div class="window_inner">
         <div class="window_innertop" style="display:flex;flex-direction: row;justify-content: center;">
-            <div style="width:88px;height:27px;font-size:10px;text-align: center;line-height: 28px;border-top:solid 1px #ccc;border-left:solid 1px #ccc;border-right:solid 1px #ccc;border-bottom:solid 2px #ff8140;"><b>本地上传</b></div>
-            <div style="width:88px;height:27px;font-size:10px;text-align: center;line-height: 28px;border-top:solid 1px #ccc;border-left:solid 1px #ccc;border-right:solid 1px #ccc;border-bottom:solid 2px #ff8140;"><b>微博相册</b></div>
+            <div style="width:88px;height:27px;font-size:10px;text-align: center;line-height: 28px;border-top:solid 1px #ccc;border-left:solid 1px #ccc;border-right:solid 1px #ccc;border-bottom:solid 2px #ff8140;">
+                <b>本地上传</b></div>
+            <div style="width:88px;height:27px;font-size:10px;text-align: center;line-height: 28px;border-top:solid 1px #ccc;border-left:solid 1px #ccc;border-right:solid 1px #ccc;border-bottom:solid 2px #ff8140;">
+                <b>微博相册</b></div>
         </div>
         <div class="window_innerbox" style="display:flex;justify-content: center;margin-top:5px;">
             <div style="background:#f2f2f5;width:508px;height:370px;">
-                <div style="position:relative;left:200px;background:white;border:solid 1px #cccccc;width:80px;height:20px;text-align: center;line-height: 20px;margin-top:150px;font-size:10px;">选择图片</div>
-            <form action="" method="POST" enctype="multipart/form-data">
-                <input type="file" style="position:relative;bottom:25px;left:205px;opacity:0;">
-                <input type="submit" onclick="get1()" value="提交" style="position:relative;float:right;top:200px;border:0px;background: transparent;color:tomato;font-size:15px;" >
-            </form>
+                <div style="position:relative;left:200px;background:white;border:solid 1px #cccccc;width:80px;height:20px;text-align: center;line-height: 20px;margin-top:150px;font-size:10px;">
+                    选择图片
+                </div>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    <input type="file" style="position:relative;bottom:25px;left:205px;opacity:0;">
+                    <input type="submit" onclick="get1()" value="提交" style="position:relative;float:right;top:200px;border:0px;background: transparent;color:tomato;font-size:15px;">
+                </form>
             </div>
         </div>
     </div>
 </div>
-<div id="message" style="background:white;width:230px;height:320px;position:relative;left:1131px;border-radius: 2px;">
-<ul style="list-style: none;">
-<li><span style="font-size:10px;color:#ababb1;">昵称</span><span style="margin-left:20px;color:black;font-size:10px;">dwa</span></li>
-<li><span style="font-size:10px;color:#ababb1;">生日</span><span style="margin-left:20px;color:black;font-size:10px;"></span></li>
-<li><span style="font-size:10px;color:#ababb1;">个人简介</span></li>
-</ul>
-<div class="message_outline" style="border:solid 2px #ababb1;width:200px;height:200px;position:relative;left:10px;">
-<span class="message_inner"></span>
+<div id="message" style="background:white;width:230px;height:320px;position:relative;left:960px;border-radius: 2px;top:65px;">
+    <ul style="list-style: none;">
+        <li><span style="font-size:10px;color:#ababb1;">个人简介</span></li>
+    </ul>
+    <div class="message_outline" style="border:solid 2px #ababb1;width:200px;height:200px;position:relative;left:10px;">
+        <span class="message_inner"></span>
+    </div>
+    <span style="color:#4dcff7;font-size:10px;position:relative;left:10px;" onclick="check()">修改信息</span>
 </div>
-<span style="color:#4dcff7;font-size:10px;position:relative;left:10px;" onclick="check()">修改信息</span>
-</div>
-<div id="check" style="background:white;width:500px;height:230px;position:fixed;left:520px;bottom:420px;z-index:49;display:none;">
-<img src="D:\vccode代码\redrock-寒假\图片\关闭.png" style="float:right;width:19px;margin-right:5px;margin-top:5px;" onclick="close2()">
-<div style="clear:both"></div>
-<form action="">
-<ul style="list-style: none;"> 
-<li><span style="font-size:10px;color:#ababb1;">昵称</span><span id="name"></span><span style="margin-left:20px;color:#4dcff7;font-size:10px;" onclick="name1()">点击修改</span><input type="text" id="name_change" style="margin-left:5px;display:none;"></li>
-<li><span style="font-size:10px;color:#ababb1;">个人简介</span><span id="introduce"></span><span style="margin-left:20px;color:#4dcff7;font-size:10px;" onclick="introduce1()">点击修改</span><textarea cols="50" rows="5" id="introduce_change" style="margin-left:5px;display:none;"></textarea></li>
-</ul>
-<input type="submit" style="border:0px;background:transparent;color:tomato;font-size:15px;float:right;">
-<div style="clear:both"></div>
-</form>
-</div>
+<div id="check"
+     style="background:white;width:500px;height:230px;position:fixed;left:400px;bottom:350px;z-index:49;display:none;">
+    <img src="D:\vccode代码\redrock-寒假\图片\关闭.png" style="float:right;width:19px;margin-right:5px;margin-top:5px;"
+         onclick="close2()">
+    <div style="clear:both"></div>
+        <ul style="list-style: none;">
+                <form action="">
+            <li><span style="font-size:10px;color:#ababb1;">昵称</span><span id="name"></span><span
+                    style="margin-left:20px;color:#4dcff7;font-size:10px;" onclick="name1()">点击修改</span><input
+                    type="text" id="name_change" style="margin-left:5px;display:none;"></li>
+                    <input type="submit" style="border:0px;background:transparent;color:tomato;font-size:15px;float:right;">
+                    <div style="clear:both"></div>
+                </form>
+                <form action="">
+            <li><span style="font-size:10px;color:#ababb1;">个人简介</span><span id="introduce"></span><span
+                    style="margin-left:20px;color:#4dcff7;font-size:10px;" onclick="introduce1()">点击修改</span><textarea
+                    cols="50" rows="5" id="introduce_change" style="margin-left:5px;display:none;"></textarea></li>
+                    <input type="submit" style="border:0px;background:transparent;color:tomato;font-size:15px;float:right;">
+                    <div style="clear:both"></div>
+                </form>
+        </ul>
 </div>
 </body>
 </html>
