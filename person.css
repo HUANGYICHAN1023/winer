@@ -26,19 +26,13 @@
     width:300px;
     height:26px;
     border:1px solid #cccccc;
-    
 }
 body{
     margin:0px;
     background-color: #b4daf0;
-    background-image: url(images/body_repeat.png?id=1414052827385);
-    background-repeat: repeat-x;
-    background-position: center 0;
 }
 .middle{
     position:fixed;
-    
-
 }
 .pct1{
     z-index:20;
@@ -252,7 +246,7 @@ body{
     display:flex;
     justify-content: center;
     align-items: center;
-    border-radius: 15;
+    border-radius: 15px;
     float:right;
     margin-right:17px;
     font-size: 15px;
