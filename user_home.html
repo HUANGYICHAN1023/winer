@@ -4,14 +4,53 @@
     <meta charset="utf-8">
     <title>个人主页</title>
     <script src="js/jquery-1.8.3.js"></script>
-    <link href="person.css" rel="stylesheet" type="text/css">
+    <link href="user_home.css" rel="stylesheet" type="text/css">
     <script>
+        function new1() {
+            $.get("/User",
+                function (txt) {
+                    var obj = JSON.parse(txt);
+                    document.getElementById("weibo_count").innerHTML = obj.data[0].weiboCount;
+                })
+        }
         function Btn() {
+            /*$.get("/User",
+                function (txt) {
+                var obj = JSON.parse(txt);
+                var name = obj.data[0].nickname;
+                })*/
+            var myDate = new Date();
             var div = document.createElement("div");
-            div.style.cssText = 'width: 600px; height:100px; border-radius: 2px;background:white;z-index:1;position:relative;left:520px;bottom:265px;margin-top:10px;font-size:15px;';
+            var div2 = document.createElement("div");
+            var div1 = document.createElement("div");
+            var div3 = document.createElement("div");
+            var im = document.createElement("img");
+            var div2_1 = document.createElement("div");
+            var div2_2 = document.createElement("div");
+            div.appendChild(div2);
+            div.appendChild(div1);
+            div.appendChild(div3);
+            div2.appendChild(im);
+            div2.appendChild(div2_1);
+            div2.appendChild(div2_2);
+            div2_1.innerHTML="用户";
+            div2_1.style.cssText="position:absolute;top:15px;left:100px;height:60px;font-size:15px;"
+            div2_2.innerHTML= myDate.toLocaleString( );
+            div2_2.style.cssText="position:absolute;top:30px;left:100px;height:60px;font-size:10px;color:#cccccc;"
+            im.src="https://thecatapi.com/api/images/get?format=src&type=gif";
+            im.style.cssText =" width:60px;position:absolute;top:15px;left:15px;height:60px;"
+            div.style.cssText = 'border:1px solid #ccc;min-height:120px;width: 600px; height:auto; border-radius: 2px;background:white;z-index:1;position:relative;left:350px;bottom:265px;margin-top:10px;font-size:15px;';
+            div1.style.cssText = "min-height:80px;width:560px;height:auto;position:relative;left:20px;"
+            div2.style.cssText ="width:600px;background:white;height:80px;"
+            div3.style.cssText ="width:600px;background:white;height:30px;"
             document.body.appendChild(div);
+            var aa = document.createElement("input");
+            aa.setAttribute('type', 'button');  
+            aa.setAttribute('value', '点赞');
+            aa.style.cssText="border:0px;background:transparent;color:#fa7d3c;position:relative;top:5px;left:10px;";
+            div3.appendChild(aa);
             var text = document.getElementById("comment_div").value;
-            div.innerHTML = text;
+            div1.innerHTML = text;
             $.post("/User/MessageAction",
                 {
                     内容: text.toString(),
@@ -23,6 +62,8 @@
                     var obj = JSON.parse(txt);
                     if (obj.status == "10000") {
                         alert(obj.data);
+                        debugger
+                        document.getElementById("weibo_count").innerHTML =parseInt(document.getElementById("weibo_count").innerHTML) + parseInt("1");
                     }
                     else if (obj.status == "10001") {
                         alert(obj.data);
@@ -31,6 +72,7 @@
                         alert(obj.data);
                     }
                 })
+
         }
         $(function () {
             $.get("/User",
@@ -40,6 +82,8 @@
                     document.getElementById("follow_count").innerHTML = obj.data[0].followCount;
                     document.getElementById("fans_count").innerHTML = obj.data[0].fansCount;
                     document.getElementById("weibo_count").innerHTML = obj.data[0].weiboCount;
+                    document.getElementById("introduction").innerHTML = obj.data[0].introduction;
+                    document.getElementById("avatar").src = obj.data[0].avatar.toString();
                 })
             // $.get("/info",
             //     function (txt) {
@@ -73,53 +117,60 @@
             document.getElementById("check").style.display="none";
         }
         function get1(){
-            $.ajax({url:"/info",
-                success:function(pct){
-                    var pct1 = JSON.parse(pct);
-                    document.getElementsByClassName(".back_img2").src=pct1;
-                }})
+            alert("上传头像成功");
+            debugger
+            $.get("/User",
+                function (txt) {
+                    var obj = JSON.parse(txt);
+                    document.getElementById('avatar').src = obj.data[0].avatar;
+                })
         }
         function name1(){
             document.getElementById("name_change").style.display="block";
-            // $.post("/User/SetNickname",
-            //     {
-            //         昵称:document.getElementById("name_change").value
-            //     }
-            //     ,
-            //     function (txt) {
-            //         var obj = JSON.parse(txt);
-            //         if (obj.status == "10000") {
-            //             alert(obj.data);
-            //         }
-            //         else if (obj.status == "10001") {
-            //             alert(obj.data);
-            //         }
-            //         else if (obj.status == "10002") {
-            //             alert(obj.data);
-            //         }
-            //     })
+        }
+        function name2(){
+            $.post("/User/SetNickname",
+                {
+                    昵称:document.getElementById("name_change").value
+                }
+                ,
+                function (txt) {
+                    var obj = JSON.parse(txt);
+                    if (obj.status == "10000") {
+                        alert(obj.data);
+                        document.getElementById("nickname").innerHTML = document.getElementById("name_change").value;
+                    }
+                    else if (obj.status == "10001") {
+                        alert(obj.data);
+                    }
+                    else if (obj.status == "10002") {
+                        alert(obj.data);
+                    }
+                })
         }
         function introduce1(){
             document.getElementById("introduce_change").style.display="block";
-            // $.post("/User/SetIntroduction",
-            //     {
-            //         简介:document.getElementById("introduce_change").value
-            //     }
-            //     ,
-            //     function (txt) {
-            //         var obj = JSON.parse(txt);
-            //         if (obj.status == "10000") {
-            //             alert(obj.data);
-            //         }
-            //         else if (obj.status == "10001") {
-            //             alert(obj.data);
-            //         }
-            //         else if (obj.status == "10002") {
-            //             alert(obj.data);
-            //         }
-            //     })
         }
-
+        function introduce2(){
+            $.post("/User/SetIntroduction",
+                {
+                    简介:document.getElementById("introduce_change").value
+                }
+                ,
+                function (txt) {
+                    var obj = JSON.parse(txt);
+                    if (obj.status == "10000") {
+                        alert(obj.data);
+                        document.getElementById("introduction").innerHTML=document.getElementById("introduce_change").value;
+                    }
+                    else if (obj.status == "10001") {
+                        alert(obj.data);
+                    }
+                    else if (obj.status == "10002") {
+                        alert(obj.data);
+                    }
+                });
+        }
     </script>
 </head>
 <body>
@@ -133,36 +184,36 @@
     <ul class="icon_ul">
         <li class="icon_li">
             <a href="https://weibo.com/">
-                <img class="pct2" src="D:\vccode代码\redrock-寒假\图片\房子 (1).png">
+                <img class="pct2" src="images\房子 (1).png">
                 <span class="text_top">首页</span>
             </a>
         </li>
         <li class="icon_li">
             <a href="https://weibo.com/">
-                <img class="pct2" src="D:\vccode代码\redrock-寒假\图片\视频 (1).png">
+                <img class="pct2" src="images\视频 (1).png">
                 <span class="text_top">视频</span>
             </a>
         </li>
         <li class="icon_li">
             <a href="https://weibo.com/">
-                <img class="pct2" src="D:\vccode代码\redrock-寒假\图片\发现-24 (1).png">
+                <img class="pct2" src="images\发现-24 (1).png">
                 <span class="text_top">发现</span>
             </a>
         </li>
         <li class="icon_li">
             <a href="https://weibo.com/">
-                <img class="pct2" src="D:\vccode代码\redrock-寒假\图片\游戏管理.png">
+                <img class="pct2" src="images\游戏管理.png">
                 <span class="text_top">游戏</span>
             </a>
         </li>
         <li class="icon_li">
             <a href="images\个人主页.html">
-                <img class="pct2" src="D:\vccode代码\redrock-寒假\图片\小人.png">
+                <img class="pct2" src="images\小人.png">
                 <span class="text_top">用户</span>
             </a>
         </li>
         <li class="icon_li">
-            <span class="text_top" onclick="login_out">退出登录</span>
+            <div class="text_top" onclick="login_out()" style="cursor:pointer">退出登录</div>
         </li>
     </ul>
     <div class="icon_character">
@@ -177,37 +228,37 @@
             <textarea id="comment_div" cols="30" rows="10" style="font-size:15px"></textarea>
             <div class="comment_put_emoji">
                 <a class="emoji_link" href="https://www.bilibili.com/">
-                    <img src="D:\vccode代码\redrock-寒假\图片\笑脸.png">
+                    <img src="images\笑脸.png">
                     <span>表情</span>
                 </a>
                 <a class="emoji_link" href="https://www.bilibili.com/">
-                    <img src="D:\vccode代码\redrock-寒假\图片\图片.png">
+                    <img src="images\图片.png">
                     <span>图片</span>
                 </a>
                 <a class="emoji_link" href="https://www.bilibili.com/">
-                    <img src="D:\vccode代码\redrock-寒假\图片\视频.png">
+                    <img src="images\视频.png">
                     <span>视频</span>
                 </a>
                 <a class="emoji_link" href="https://www.bilibili.com/">
-                    <img src="D:\vccode代码\redrock-寒假\图片\话题.png">
+                    <img src="images\话题.png">
                     <span>话题</span>
                 </a>
                 <a class="emoji_link" href="https://www.bilibili.com/">
-                    <img src="D:\vccode代码\redrock-寒假\图片\闪电.png">
+                    <img src="images\闪电.png">
                     <span>头条文章</span>
                 </a>
             </div>
             <form action="/User/MessageAction" method="post">
                 <div class="comment_put_put">
                     <input type="text" class="getsth" style="display:none;font-size:20px">
-                    <input type="button" value="发布" onclick="Btn()">
+                    <input type="button" value="发布" onclick="Btn()" style="cursor:pointer">
                 </div>
             </form>
         </div>
         <div class="comment_person" style="float:left; border-radius: 2px">
             <div class="comment_person_back">
-                <img src="D:\vccode代码\redrock-寒假\图片\绿地.png" class="back_img1">
-                <img src="D:\vccode代码\redrock-寒假\图片\用户圆.png" class="back_img2" onclick="op()">
+                <img src="images\绿地.png" class="back_img1">
+                <img src="images\用户圆.png" class="back_img2" id="avatar" onclick="op()">
             </div>
             <div class="comment_person_data">
                 <div class="nameBox">
@@ -244,7 +295,7 @@
 <div id="wd" style="position:fixed;left:400px;z-index:100;border-radius: 2px;display:none;">
     <div class="window_title">
         <b style="margin-left:10px;">头像设置</b>
-        <input type="image"src="D:\vccode代码\redrock-寒假\图片\关闭.png"style="width:15px;float:right;position:relative;right:20px;top:12px;"onclick="close1()">
+        <input type="image"src="images\关闭.png"style="width:15px;float:right;position:relative;right:20px;top:12px;"onclick="close1()">
     </div>
     <div class="window_inner">
         <div class="window_innertop" style="display:flex;flex-direction: row;justify-content: center;">
@@ -258,8 +309,8 @@
                 <div style="position:relative;left:200px;background:white;border:solid 1px #cccccc;width:80px;height:20px;text-align: center;line-height: 20px;margin-top:150px;font-size:10px;">
                     选择图片
                 </div>
-                <form action="" method="POST" enctype="multipart/form-data">
-                    <input type="file" style="position:relative;bottom:25px;left:205px;opacity:0;">
+                <form action="/UploadTestAction" method="POST" enctype="multipart/form-data">
+                    <input name="图片" type="file" style="position:relative;bottom:25px;left:205px;opacity:0;">
                     <input type="submit" onclick="get1()" value="提交" style="position:relative;float:right;top:200px;border:0px;background: transparent;color:tomato;font-size:15px;">
                 </form>
             </div>
@@ -271,30 +322,26 @@
         <li><span style="font-size:10px;color:#ababb1;">个人简介</span></li>
     </ul>
     <div class="message_outline" style="border:solid 2px #ababb1;width:200px;height:200px;position:relative;left:10px;">
-        <span class="message_inner"></span>
+        <span class="message_inner" id="introduction"></span>
     </div>
-    <span style="color:#4dcff7;font-size:10px;position:relative;left:10px;" onclick="check()">修改信息</span>
+    <span style="color:#4dcff7;font-size:10px;position:relative;left:10px;cursor:pointer" onclick="check()">修改信息</span>
 </div>
 <div id="check"
      style="background:white;width:500px;height:230px;position:fixed;left:400px;bottom:350px;z-index:49;display:none;">
-    <img src="D:\vccode代码\redrock-寒假\图片\关闭.png" style="float:right;width:19px;margin-right:5px;margin-top:5px;"
+    <img src="images\关闭.png" style="float:right;width:19px;margin-right:5px;margin-top:5px;"
          onclick="close2()">
     <div style="clear:both"></div>
         <ul style="list-style: none;">
-                <form action="">
             <li><span style="font-size:10px;color:#ababb1;">昵称</span><span id="name"></span><span
                     style="margin-left:20px;color:#4dcff7;font-size:10px;" onclick="name1()">点击修改</span><input
                     type="text" id="name_change" style="margin-left:5px;display:none;"></li>
-                    <input type="submit" style="border:0px;background:transparent;color:tomato;font-size:15px;float:right;">
+                    <input type="submit" style="border:0px;background:transparent;color:tomato;font-size:15px;float:right;" onclick="name2()">
                     <div style="clear:both"></div>
-                </form>
-                <form action="">
             <li><span style="font-size:10px;color:#ababb1;">个人简介</span><span id="introduce"></span><span
                     style="margin-left:20px;color:#4dcff7;font-size:10px;" onclick="introduce1()">点击修改</span><textarea
                     cols="50" rows="5" id="introduce_change" style="margin-left:5px;display:none;"></textarea></li>
-                    <input type="submit" style="border:0px;background:transparent;color:tomato;font-size:15px;float:right;">
+                    <input type="submit" style="border:0px;background:transparent;color:tomato;font-size:15px;float:right;" onclick="introduce2()">
                     <div style="clear:both"></div>
-                </form>
         </ul>
 </div>
 </body>
